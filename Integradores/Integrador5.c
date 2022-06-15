@@ -13,7 +13,12 @@ void cargarEnvios();
 void mostrarEnvios();
 void modificarEstadoDeUnEnvio();
 void mostrarEnvioParaDestino(int destino);
-
+void mostrarEnvio(int i);
+void mostrarEnviosPedientes();
+void mostrarEnviosDespachados();
+void mostrarEnvioMayorPeso();
+void mostrarEnvioMenorPeso();
+                  
 void main()
 {
     int opcion = 0;
@@ -35,7 +40,7 @@ void main()
 
         while (validarCarga==0 && opcion!=1)
         {
-            printf("Ingrese 1 para cargar los env%cos antes de ejecutar otra accion del menu",161);
+            printf("Ingrese 1 para cargar los env%cos antes de ejecutar otra accion del menu\n",161);
             scanf("%d", &opcion);
             validarCarga=1;
         }
