@@ -7,7 +7,7 @@ int destinos[50];
 int horasPlanificadas[50];
 int estados[50];
 
-const int tam = 2;
+const int tam = 50;
 
 void cargarEnvios();
 void mostrarEnvios();
@@ -18,6 +18,7 @@ void main()
 {
     int opcion = 0;
     int des = 0; 
+    int validarCarga=0;
 
     do
     {
@@ -25,10 +26,21 @@ void main()
         printf("\n2- Mostrar env%cos planificados.", 161);
         printf("\n3- Modificar estado de un env%co.", 161);
         printf("\n4- Mostrar env%cos para un destino.", 161);
-        printf("\n5- Salir.\n\n");
+        printf("\n5- Mostrar env%cos pendientes.", 161);
+        printf("\n6- Mostrar env%cos despachados.", 161);
+        printf("\n7- Mostrar env%co de mayor peso", 161);
+        printf("\n8- Mostrar env%co de menor peso.", 161);
+        printf("\n9- Salir.\n\n");
         scanf("%d", &opcion);
 
-        if(opcion != 5)
+        while (validarCarga==0 && opcion!=1)
+        {
+            printf("Ingrese 1 para cargar los env%cos antes de ejecutar otra accion del menu",161);
+            scanf("%d", &opcion);
+            validarCarga=1;
+        }
+        
+        if(opcion != 9)
         {
             switch(opcion)
             {
@@ -55,16 +67,106 @@ void main()
                     scanf("%i", &des);
                     //validar destino 
                     mostrarEnvioParaDestino(des);
-
                     break;
+                case 5: 
+                    mostrarEnviosPedientes();
+                    break;
+                case 6: 
+                    mostrarEnviosDespachados();
+                    break;
+                case 7:
+                    mostrarEnvioMayorPeso();
+                    break;
+                case 8:
+                    mostrarEnvioMenorPeso();
+                    break; 
                 default:
                     printf("La opci%cn ingresada es inv%clida\n", 162, 160);
             }  
         }
 
-    } while (opcion != 5);
+    } while (opcion != 9);
 }
 
+void mostrarEnvioMenorPeso(){
+    
+    int menor = pesos[0];
+    /*int posicionMenor = 0;*/
+    
+    for (int i = 1; i < tam; i++)
+    {
+       if(pesos[i] < menor){
+        menor = pesos[i];
+        /*
+        posicionMenor = i;
+        */
+       }
+    }
+
+    /*mostrarEnvio(i);*/
+
+    for(int i = 0; i<tam; i++){
+        if(pesos[i]==menor){
+            mostrarEnvio(i);
+        }
+    }
+    
+}
+
+void mostrarEnvioMayorPeso(){
+    int mayor = pesos[0];
+
+    for (int i = 1; i < tam; i++)
+    {
+        if (pesos[i]> mayor)
+        {
+            mayor = pesos[i];
+        }
+    }
+
+    for (int i = 0; i < tam; i++)
+    {
+        if(pesos[i]== mayor)
+        {
+            mostrarEnvio(i);
+        }
+    }
+    
+    
+}
+
+
+void mostrarEnviosDespachados(){
+    
+    int encontrado = 0;
+    for (int i = 0; i < tam; i++)
+    {
+        if(estados[i] == 1){
+            mostrarEnvio(i);
+            encontrado = 1;
+        }
+    }
+    
+    if(encontrado == 0){
+        printf("No hay envios despachados");
+    }
+}
+
+void mostrarEnviosPedientes(){
+    int encontrado = 0;
+    for (int i = 0; i < tam; i++)
+    {
+        if(estados[i] == 0){
+            mostrarEnvio(i);
+            encontrado = 1;
+        }
+    }
+
+    if(encontrado == 0){
+        printf("No hay envios pendientes");
+    }
+    
+}
 
 void cargarEnvios()
 {
@@ -110,7 +212,7 @@ void cargarEnvios()
         while (horasPlanificadas[i]<8 || horasPlanificadas[i]>22)
         {
             printf("Hora invalido! Ingrese nuevamente: ");
-            scanf("%d", &numerosID[i]);
+            scanf("%d", &horasPlanificadas[i]);
         }
 
         printf("Ingrese el estado: ");
@@ -126,7 +228,6 @@ void cargarEnvios()
         }
     }
 }
-
 
 void mostrarEnvios()
 {
@@ -224,5 +325,55 @@ void modificarEstadoDeUnEnvio()
 
 void mostrarEnvioParaDestino(int destino)
 {
+    int i, encontrado = 0;
+    for (i = 0; i < tam; i++)
+    {
+        if (destinos[i] == destino)
+        {
+            mostrarEnvios(i);
+            encontrado = 1;      
+        }
+    }
+    
+    if(encontrado == 0){
+        printf("Destino no encontrado o sin envios!");
+    }
+}
 
+void mostrarEnvio(int i){
+    printf(" %d \t", numerosID[i]);
+    printf(" %.2f \t", pesos[i]);
+    switch(destinos[i])
+    {
+        case 1:
+            printf("Rosario");
+            break;
+        case 2:
+            printf("Funes");
+            break;
+        case 3:
+            printf("Roldan");
+            break;
+        case 4:
+            printf("Baigorria");
+            break; 
+        default:
+            printf("Destino inv%clido\n", 160);
+    }
+    printf("\t");
+    printf(" %d hs \t", horasPlanificadas[i]);
+
+    switch(estados[i])
+    {
+        case 0:
+            printf("Pendiente");
+            break;
+        case 1:
+            printf("Despachado");
+            break;
+        default:
+            printf("Estado inv%clido\n", 160);
+    }
+    
+    printf("\n");
 }
